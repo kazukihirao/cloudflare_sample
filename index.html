@@ -21,9 +21,9 @@
 <center> 
 <img src="flattail_logo.jpg" alt="flattail.com logo">
 <div id="visitor-info">
-    <p>アクセス元IPアドレス: <span id="visitor-ip">取得中...</span></p>
-    <p>ブラウザ情報: <span id="browser-info">取得中...</span></p>
-    <p>現在時刻: <span id="current-time">取得中...</span></p>
+    <p>IP Address: <span id="visitor-ip">Loading...</span></p>
+    <p>Browser Information: <span id="browser-info">Loading...</span></p>
+    <p>Current Time: <span id="current-time">Loading...</span></p>
 </div>
 <footer>
     &copy; 2026 flattail.com. All Rights Reserved.
@@ -38,7 +38,7 @@
     browserInfo.textContent = navigator.userAgent;
 
     const updateCurrentTime = () => {
-        currentTime.textContent = `${new Date().toLocaleString('ja-JP', {
+        currentTime.textContent = `${new Date().toLocaleString('en-US', {
             dateStyle: 'medium',
             timeStyle: 'medium',
             hour12: false,
@@ -58,10 +58,10 @@
         })
         .then((trace) => {
             const ip = trace.match(/^ip=(.+)$/m);
-            visitorIp.textContent = ip ? ip[1] : '取得できませんでした';
+            visitorIp.textContent = ip ? ip[1] : 'Unable to retrieve';
         })
         .catch(() => {
-            visitorIp.textContent = 'Cloudflare経由でアクセスした場合のみ取得できます';
+            visitorIp.textContent = 'Available only when accessed through Cloudflare';
         });
 </script>
 </body>
