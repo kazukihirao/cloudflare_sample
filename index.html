@@ -11,14 +11,58 @@
             max-width: 100%;
             height: auto;
         }
+
+        #visitor-info {
+            margin: 1rem 0;
+        }
     </style>
 </head>
 <body>
 <center> 
 <img src="flattail_logo.jpg" alt="flattail.com logo">
+<div id="visitor-info">
+    <p>アクセス元IPアドレス: <span id="visitor-ip">取得中...</span></p>
+    <p>ブラウザ情報: <span id="browser-info">取得中...</span></p>
+    <p>現在時刻: <span id="current-time">取得中...</span></p>
+</div>
 <footer>
     &copy; 2026 flattail.com. All Rights Reserved.
 </footer>
 </center>
+<script>
+    const visitorIp = document.getElementById('visitor-ip');
+    const browserInfo = document.getElementById('browser-info');
+    const currentTime = document.getElementById('current-time');
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    browserInfo.textContent = navigator.userAgent;
+
+    const updateCurrentTime = () => {
+        currentTime.textContent = `${new Date().toLocaleString('ja-JP', {
+            dateStyle: 'medium',
+            timeStyle: 'medium',
+            hour12: false,
+            timeZone
+        })} (${timeZone})`;
+    };
+
+    updateCurrentTime();
+    setInterval(updateCurrentTime, 1000);
+
+    fetch('/cdn-cgi/trace')
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('IP address is unavailable');
+            }
+            return response.text();
+        })
+        .then((trace) => {
+            const ip = trace.match(/^ip=(.+)$/m);
+            visitorIp.textContent = ip ? ip[1] : '取得できませんでした';
+        })
+        .catch(() => {
+            visitorIp.textContent = 'Cloudflare経由でアクセスした場合のみ取得できます';
+        });
+</script>
 </body>
 </html>
