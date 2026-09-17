@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="ja">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,23 @@
         #visitor-info {
             margin: 1rem 0;
         }
+
+        #browser-details {
+            display: inline-grid;
+            grid-template-columns: auto auto;
+            gap: 0.25rem 1rem;
+            margin: 0.5rem 0 1rem;
+            text-align: left;
+        }
+
+        #browser-details dt {
+            font-weight: bold;
+        }
+
+        #browser-details dd {
+            margin: 0;
+            overflow-wrap: anywhere;
+        }
     </style>
 </head>
 <body>
@@ -24,6 +41,27 @@
     <p>IP Address: <span id="visitor-ip">Loading...</span></p>
     <p>Browser Information: <span id="browser-info">Loading...</span></p>
     <p>Current Time: <span id="current-time">Loading...</span></p>
+    <h2>Browser Details</h2>
+    <dl id="browser-details">
+        <dt>Operating System</dt>
+        <dd id="operating-system">Loading...</dd>
+        <dt>Languages</dt>
+        <dd id="languages">Loading...</dd>
+        <dt>Screen Resolution</dt>
+        <dd id="screen-resolution">Loading...</dd>
+        <dt>Color Depth</dt>
+        <dd id="color-depth">Loading...</dd>
+        <dt>CPU Cores</dt>
+        <dd id="cpu-cores">Loading...</dd>
+        <dt>Device Memory</dt>
+        <dd id="device-memory">Loading...</dd>
+        <dt>Touch Points</dt>
+        <dd id="touch-points">Loading...</dd>
+        <dt>Cookies</dt>
+        <dd id="cookies">Loading...</dd>
+        <dt>Online Status</dt>
+        <dd id="online-status">Loading...</dd>
+    </dl>
 </div>
 <footer>
     &copy; 2026 flattail.com. All Rights Reserved.
@@ -34,8 +72,18 @@
     const browserInfo = document.getElementById('browser-info');
     const currentTime = document.getElementById('current-time');
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const unavailable = 'Unavailable';
 
     browserInfo.textContent = navigator.userAgent;
+    document.getElementById('operating-system').textContent = navigator.platform || unavailable;
+    document.getElementById('languages').textContent = navigator.languages?.join(', ') || navigator.language || unavailable;
+    document.getElementById('screen-resolution').textContent = `${screen.width} x ${screen.height} px`;
+    document.getElementById('color-depth').textContent = screen.colorDepth ? `${screen.colorDepth}-bit` : unavailable;
+    document.getElementById('cpu-cores').textContent = navigator.hardwareConcurrency || unavailable;
+    document.getElementById('device-memory').textContent = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : unavailable;
+    document.getElementById('touch-points').textContent = navigator.maxTouchPoints ?? unavailable;
+    document.getElementById('cookies').textContent = navigator.cookieEnabled ? 'Enabled' : 'Disabled';
+    document.getElementById('online-status').textContent = navigator.onLine ? 'Online' : 'Offline';
 
     const updateCurrentTime = () => {
         currentTime.textContent = `${new Date().toLocaleString('en-US', {
